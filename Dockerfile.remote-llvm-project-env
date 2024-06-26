@@ -1,0 +1,57 @@
+# ベースイメージとして公式のUbuntuイメージを使用
+FROM ubuntu:20.04
+
+ARG UID=1001
+ARG GID=1001
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update \
+  && apt-get install -y ssh \
+      tzdata \
+      build-essential \
+      gdb \
+      clang \
+      rsync \
+      tar \
+      python3 \
+      sudo \
+      make \
+      ninja-build \
+      autoconf \
+      automake \
+      locales-all \
+      dos2unix \
+      valgrind \
+  && apt-get clean
+
+# CMakeのインストール
+RUN version=3.28.6 \
+  && wget https://github.com/Kitware/CMake/releases/download/v$version/cmake-$version-Linux-aarch64.sh \
+  && sh cmake-$version-Linux-aarch64.sh --skip-license --prefix=/usr \
+  && rm -f cmake-$version-Linux-aarch64.sh
+
+RUN ( \
+    echo 'LogLevel DEBUG2'; \
+    echo 'PermitRootLogin yes'; \
+    echo 'PasswordAuthentication yes'; \
+    echo 'Subsystem sftp /usr/lib/openssh/sftp-server'; \
+  ) > /etc/ssh/sshd_config_test_clion \
+  && mkdir /run/sshd
+
+# ユーザーとグループの作成
+RUN if ! getent group $GID; then groupadd -r --gid $GID user; else groupmod -n user $(getent group $GID | cut -d: -f1); fi \
+ && useradd --no-log-init --create-home -g user -r --uid $UID user \
+ && echo 'user:1' | chpasswd \
+ && mkdir -p /etc/sudoers.d \
+ && echo "user ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/user \
+ && chmod 0440 /etc/sudoers.d/user
+
+# 必要なディレクトリを作成してからファイルをコピー
+RUN mkdir -p /home/user/llvm-project/llvm
+
+COPY . /home/user/llvm-project
+
+RUN touch /home/user/llvm-project/llvm/.clion.source.upload.marker \
+ && chown -R user:user /home/user/llvm-project
+
+CMD ["/usr/sbin/sshd", "-D", "-e", "-f", "/etc/ssh/sshd_config_test_clion"]
