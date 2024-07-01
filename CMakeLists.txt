@@ -14,3 +14,5 @@ add_executable(var var.c
 add_executable(var2 var2.c)
 
 add_executable(net net.c)
+
+add_executable(array array.c)
