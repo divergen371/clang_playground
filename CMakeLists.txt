@@ -18,3 +18,5 @@ add_executable(net net.c)
 add_executable(array array.c)
 
 add_executable(string string.c)
+
+add_executable(string2 string2.c)
