@@ -42,3 +42,5 @@ add_executable(for4 for4.c)
 add_executable(sum sum.c)
 
 add_executable(multi_loop multi_loop.c)
+
+add_executable(switch switch.c)
