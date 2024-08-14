@@ -32,3 +32,9 @@ add_executable(for for.c)
 add_executable(while while.c)
 
 add_executable(do_while do_while.c)
+
+add_executable(for2 for2.c)
+
+add_executable(for3 for3.c)
+
+add_executable(for4 for4.c)
