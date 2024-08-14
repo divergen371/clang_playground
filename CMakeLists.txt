@@ -20,3 +20,15 @@ add_executable(array array.c)
 add_executable(string string.c)
 
 add_executable(string2 string2.c)
+
+add_executable(string3 string3.c)
+
+add_executable(if if.c)
+
+add_executable(if2 if2.c)
+
+add_executable(for for.c)
+
+add_executable(while while.c)
+
+add_executable(do_while do_while.c)
