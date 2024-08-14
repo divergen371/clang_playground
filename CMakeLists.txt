@@ -38,3 +38,7 @@ add_executable(for2 for2.c)
 add_executable(for3 for3.c)
 
 add_executable(for4 for4.c)
+
+add_executable(sum sum.c)
+
+add_executable(multi_loop multi_loop.c)
